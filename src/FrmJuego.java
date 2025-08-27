@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -11,6 +12,11 @@ import javax.swing.SwingConstants;
 
 public class FrmJuego extends JFrame {
 
+    private Dado dado1, dado2;
+    private Random r;
+    private JLabel lblDado1, lblDado2, lblLanzamientos, lblCenas;
+    private int lanzamientos, cenas;
+
     // metodo constructor
     public FrmJuego() {
         setTitle("Juego de Dados");
@@ -18,14 +24,14 @@ public class FrmJuego extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
 
-        JLabel lblDado1 = new JLabel();
+        lblDado1 = new JLabel();
         String archivoImagen = "imagenes/3.jpg";
         ImageIcon imgDado = new ImageIcon(getClass().getResource(archivoImagen));
         lblDado1.setIcon(imgDado);
         lblDado1.setBounds(10, 10, imgDado.getIconWidth(), imgDado.getIconHeight());
         getContentPane().add(lblDado1);
 
-        JLabel lblDado2 = new JLabel();
+        lblDado2 = new JLabel();
         lblDado2.setIcon(imgDado);
         lblDado2.setBounds(20 + imgDado.getIconWidth(), 10, imgDado.getIconWidth(), imgDado.getIconHeight());
         getContentPane().add(lblDado2);
@@ -38,23 +44,23 @@ public class FrmJuego extends JFrame {
         lblTituloCenas.setBounds(140 + 2 * imgDado.getIconWidth(), 10, 100, 25);
         getContentPane().add(lblTituloCenas);
 
-        JLabel lbLanzamientos = new JLabel("0");
-        lbLanzamientos.setBounds(30 + 2 * imgDado.getIconWidth(), 40, 100, 100);
-        lbLanzamientos.setFont(new Font("Tahoma", 1, 72));
-        lbLanzamientos.setHorizontalAlignment(SwingConstants.RIGHT);
-        lbLanzamientos.setBackground(new Color(0, 0, 0));
-        lbLanzamientos.setForeground(new Color(60, 255, 0));
-        lbLanzamientos.setOpaque(true);
-        getContentPane().add(lbLanzamientos);
+        lblLanzamientos = new JLabel("0");
+        lblLanzamientos.setBounds(30 + 2 * imgDado.getIconWidth(), 40, 100, 100);
+        lblLanzamientos.setFont(new Font("Tahoma", 1, 72));
+        lblLanzamientos.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblLanzamientos.setBackground(new Color(0, 0, 0));
+        lblLanzamientos.setForeground(new Color(60, 255, 0));
+        lblLanzamientos.setOpaque(true);
+        getContentPane().add(lblLanzamientos);
 
-        JLabel lbCenas = new JLabel("0");
-        lbCenas.setBounds(140 + 2 * imgDado.getIconWidth(), 40, 100, 100);
-        lbCenas.setFont(new Font("Tahoma", 1, 72));
-        lbCenas.setHorizontalAlignment(SwingConstants.RIGHT);
-        lbCenas.setBackground(new Color(0, 0, 0));
-        lbCenas.setForeground(new Color(60, 255, 0));
-        lbCenas.setOpaque(true);
-        getContentPane().add(lbCenas);
+        lblCenas = new JLabel("0");
+        lblCenas.setBounds(140 + 2 * imgDado.getIconWidth(), 40, 100, 100);
+        lblCenas.setFont(new Font("Tahoma", 1, 72));
+        lblCenas.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblCenas.setBackground(new Color(0, 0, 0));
+        lblCenas.setForeground(new Color(60, 255, 0));
+        lblCenas.setOpaque(true);
+        getContentPane().add(lblCenas);
 
         JButton btnIniciar = new JButton("Iniciar");
         btnIniciar.setBounds(10, 10 + imgDado.getIconWidth(), 100, 25);
@@ -81,13 +87,36 @@ public class FrmJuego extends JFrame {
             }
 
         });
+
+        // crear las instancias de los dados y el generador de numeros aleatorios
+        dado1 = new Dado();
+        dado2 = new Dado();
+        r = new Random();
     }
 
     private void iniciarLanzamientos() {
-
+        lanzamientos = 0;
+        cenas = 0;
+        lblLanzamientos.setText(String.valueOf(lanzamientos));
+        lblCenas.setText(String.valueOf(cenas));
     }
 
     private void lanzar() {
+        // lanzar los dados
+        dado1.lanzar(r);
+        dado2.lanzar(r);
 
+        // mostrar los dados
+        dado1.mostrar(lblDado1);
+        dado2.mostrar(lblDado2);
+
+        // actualizar los contadores
+        lanzamientos++;
+        lblLanzamientos.setText(String.valueOf(lanzamientos));
+
+        if (dado1.getCara() + dado2.getCara() >= 11) {
+            cenas++;
+            lblCenas.setText(String.valueOf(cenas));
+        }
     }
 }
